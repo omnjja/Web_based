@@ -3,10 +3,8 @@
 include 'Header.php';
 ?>
     <div>
-        <div>
-            <h4>User Registration</h4>
-        </div>
-        <div>
+        <div class="form-container">
+        <h4>User Registration</h4>
             <form id="registrationForm" method="post" action="DB_Ops.php" enctype="multipart/form-data">
                 <div>
                     <label for="full_name">Full Name *</label>
