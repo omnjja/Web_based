@@ -49,6 +49,28 @@ include 'Header.php';
             </form>
         </div>
     </div>
+
+    <script>
+    document.getElementById("validateWhatsApp").addEventListener("click", function () {
+        const number = document.getElementById("whatsapp").value;
+
+        fetch("API_Ops.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: "whatsapp=" + encodeURIComponent(number),
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+        })
+        .catch(error => {
+            alert("Error: " + error);
+        });
+    });
+    </script>
+    
 <?php
 include 'Footer.php';
 ?>
