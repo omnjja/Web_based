@@ -5,7 +5,7 @@ $password = '1234';
 $dbname = 'user_registration';
 
 // Create connection
-$conn = mysqli_connect($servername, $username, $password);
+$conn = mysqli_connect($host, $username, $password);
 
 // Check connection
 if (!$conn) {
