@@ -15,6 +15,7 @@ include 'Header.php';
                     <label for="user_name">Username *</label>
                     <input type="text" id="user_name" name="user_name">
                     <small class="error-msg" id="error-user_name"></small>
+                    <div id="username-status" style="font-size: 12px; margin-top: 4px;"></div>
                 </div>
                 <div>
                     <label for="email">Email *</label>
@@ -75,12 +76,23 @@ include 'Header.php';
         // Regexes
         const nameRegex = /^[a-zA-Z\s]+$/;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^(010|011|012|015)[0-9]{8}$/;
         const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
         fields.forEach(field => {
             const input = document.getElementById(field);
             const error = document.getElementById("error-" + field);
 
+                    // Hide error when user starts typing
+            input.addEventListener("input", function () {
+            if (input.value.trim() !== "") {
+                input.classList.remove("error");
+                error.classList.remove("show");
+                error.textContent = "";
+                }
+            });
+
+            //to remove old error messages
             input.classList.remove("error");
             error.classList.remove("show");
             error.textContent = "";
@@ -88,7 +100,7 @@ include 'Header.php';
             if (!input.value) {
                 input.classList.add("error");
                 error.textContent = "This field is required.";
-                error.classList.add("show");
+                error.classList.add("show");// to inform css to show this 
                 valid = false;
             } else {
                 if (field === "full_name" && !nameRegex.test(input.value)) {
@@ -102,6 +114,12 @@ include 'Header.php';
                     error.textContent = "Invalid email format.";
                     error.classList.add("show");
                     valid = false;
+                }
+                if (field === "phone" && !phoneRegex.test(input.value)) {
+                input.classList.add("error");
+                error.textContent = "Phone must start with 010, 011, 012, or 015 and be 11 digits.";
+                error.classList.add("show");
+                valid = false;
                 }
                 if (field === "password" && !passwordRegex.test(input.value)) {
                     input.classList.add("error");
@@ -120,12 +138,37 @@ include 'Header.php';
         if (valid) {
             this.submit(); 
         }
-});
+    });
 
+    const userName = document.getElementById("user_name");
+    userName.addEventListener("input", function () {
+        const username = this.value;
+
+        if (username.length > 2) {
+            fetch("check_username.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: "username=" + encodeURIComponent(username),
+            })
+            .then(response => response.text())
+            .then(data => {
+                const msg = document.getElementById("username-status");
+                if (data === "taken") {
+                    msg.textContent = "❌ Username already taken!";
+                    msg.style.color = "red";
+                } else {
+                    msg.textContent = "✅ Username is available!";
+                    msg.style.color = "green";
+                }
+            })
+            .catch(err => console.error("Error checking username: ", err));
+        }
+    });
 
     document.getElementById("validateWhatsApp").addEventListener("click", function () {
         const number = document.getElementById("whatsapp").value;
-
         fetch("API_Ops.php", {
             method: "POST",
             headers: {
