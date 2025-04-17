@@ -77,6 +77,7 @@ include 'Header.php';
         const nameRegex = /^[a-zA-Z\s]+$/;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const phoneRegex = /^(010|011|012|015)[0-9]{8}$/;
+        const addressRegex = /^[\w\s\.,#-]{5,}$/;
         const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
         fields.forEach(field => {
@@ -120,6 +121,12 @@ include 'Header.php';
                 error.textContent = "Phone must start with 010, 011, 012, or 015 and be 11 digits.";
                 error.classList.add("show");
                 valid = false;
+                }
+                if (field === "address" && !addressRegex.test(input.value)) {
+                    input.classList.add("error");
+                    error.textContent = "Enter a valid address (min 5 characters).";
+                    error.classList.add("show");
+                    valid = false;
                 }
                 if (field === "password" && !passwordRegex.test(input.value)) {
                     input.classList.add("error");
