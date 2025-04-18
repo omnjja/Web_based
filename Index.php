@@ -149,7 +149,7 @@ include 'Header.php';
 
     const userName = document.getElementById("user_name");
     userName.addEventListener("input", function () {
-        const username = this.value;
+        const username = this.value.trim();
 
         if (username.length > 2) {
             fetch("check_username.php", {
@@ -159,10 +159,11 @@ include 'Header.php';
                 },
                 body: "username=" + encodeURIComponent(username),
             })
-            .then(response => response.text())
-            .then(data => {
+            .then(response => response.json())
+.then(data => {
+                console.log("Response from server:", data); // ⬅️ هنا
                 const msg = document.getElementById("username-status");
-                if (data === "taken") {
+                if (data.status === "taken") {
                     msg.textContent = "❌ Username already taken!";
                     msg.style.color = "red";
                 } else {
